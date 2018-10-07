@@ -49,17 +49,41 @@ int destroy_mutex() {
     return 0;
 }
 
-void *single_thread_mutex(void *rank) {
+int operations[M];
+int values[M];
+int n_threads_mutex;
+struct Node *head = NULL;
 
+void *single_mutex(void *rank) {
+    int share = M / n_threads_mutex;
+    int id = (int) rank;
+    int bi = share * id;
+    int ei = share * (id + 1);
+
+    for (int i = bi; i < ei; ++i) {
+        switch (operations[i]) {
+	    case 1:
+	        insert_mutex(values[i], &head);
+		break;
+	    case 2:
+		delete_mutex(values[i], &head);
+		break;
+	    default:
+                member_mutex(values[i], head);
+		break;
+	}
+    }
+
+    return NULL;
 }
 
 double time_mutex(int mInserts, int mDeletes, int thread_count) {
-    int operations[M];
-    int values[M];
+    n_threads_mutex = thread_count;
+    pthread_t *thread_handles;
 
     double start, finish, elapsed;
 
-    struct Node *head = NULL;
+    *head = NULL;
     populate_initial(head);
 
     populate_values(values);
@@ -69,13 +93,13 @@ double time_mutex(int mInserts, int mDeletes, int thread_count) {
 
     pthread_mutex_init(&mutex, NULL);
 
-//    for (thread = 0; thread < thread_count; thread++) {
-//        pthread_create(&thread_handles[thread], NULL, pthread_on_linked_list, (void *) thread);
-//    }
-//
-//    for (thread = 0; thread < thread_count; thread++) {
-//        pthread_join(thread_handles[thread], NULL);
-//    }
+    for (int thread = 0; thread < thread_count; thread++) {
+        pthread_create(&thread_handles[thread], NULL, single_mutex,  (void *) thread);
+    }
+
+    for (int thread = 0; thread < thread_count; thread++) {
+        pthread_join(thread_handles[thread], NULL);
+    }
 
     pthread_mutex_destroy(&mutex);
 
