@@ -2,9 +2,9 @@
 
 if [ -d "./build" ]; then
     rm -rf ./build
-    mkdir build
 fi
 
+mkdir build
 cd build
 cmake ..
 make
