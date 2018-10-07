@@ -62,16 +62,16 @@ void *single_mutex(void *rank) {
 
     for (int i = bi; i < ei; ++i) {
         switch (operations[i]) {
-	    case 1:
-	        insert_mutex(values[i], &head);
-		break;
-	    case 2:
-		delete_mutex(values[i], &head);
-		break;
-	    default:
+            case 1:
+                insert_mutex(values[i], &head);
+                break;
+            case 2:
+                delete_mutex(values[i], &head);
+                break;
+            default:
                 member_mutex(values[i], head);
-		break;
-	}
+                break;
+        }
     }
 
     return NULL;
@@ -80,10 +80,11 @@ void *single_mutex(void *rank) {
 double time_mutex(int mInserts, int mDeletes, int thread_count) {
     n_threads_mutex = thread_count;
     pthread_t *thread_handles;
+    thread_handles = (pthread_t *) malloc(thread_count * sizeof(pthread_t));
 
     double start, finish, elapsed;
 
-    *head = NULL;
+    head = NULL;
     populate_initial(head);
 
     populate_values(values);
@@ -91,17 +92,17 @@ double time_mutex(int mInserts, int mDeletes, int thread_count) {
 
     GET_TIME(start);
 
-    pthread_mutex_init(&mutex, NULL);
+    init_mutex();
 
-    for (int thread = 0; thread < thread_count; thread++) {
-        pthread_create(&thread_handles[thread], NULL, single_mutex,  (void *) thread);
+    for (long thread = 0; thread < thread_count; thread++) {
+        pthread_create(&thread_handles[thread], NULL, single_mutex, (void *) thread);
     }
 
     for (int thread = 0; thread < thread_count; thread++) {
         pthread_join(thread_handles[thread], NULL);
     }
 
-    pthread_mutex_destroy(&mutex);
+    destroy_mutex();
 
     GET_TIME(finish);
     elapsed = finish - start;
