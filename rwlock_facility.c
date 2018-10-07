@@ -49,19 +49,60 @@ int destroy_rwlock() {
     return 0;
 }
 
-double time_rwlock(int mInserts, int mDeletes, int threads) {
-    int operations[M];
-    int values[M];
+int operations_rwlock[M];
+int values_rwlock[M];
+int n_threads_rwlock;
+struct Node *head_rwlock = NULL;
+
+void *single_rwlock(void *rank) {
+    int share = M / n_threads_rwlock;
+    int id = (int) rank;
+    int bi = share * id;
+    int ei = share * (id + 1);
+
+    for (int i = bi; i < ei; ++i) {
+        switch (operations_rwlock[i]) {
+            case 1:
+                insert_rwlock(values_rwlock[i], &head_rwlock);
+                break;
+            case 2:
+                delete_rwlock(values_rwlock[i], &head_rwlock);
+                break;
+            default:
+                member_rwlock(values_rwlock[i], head_rwlock);
+                break;
+        }
+    }
+
+    return NULL;
+}
+
+double time_rwlock(int mInserts, int mDeletes, int thread_count) {
+    n_threads_rwlock = thread_count;
+    pthread_t *thread_handles;
+    thread_handles = (pthread_t *) malloc(thread_count * sizeof(pthread_t));
 
     double start, finish, elapsed;
 
-    struct Node *head = NULL;
-    populate_initial(head);
+    head_rwlock = NULL;
+    populate_initial(head_rwlock);
 
-    populate_values(values);
-    populate_operations(operations, mInserts, mDeletes);
+    populate_values(values_rwlock);
+    populate_operations(operations_rwlock, mInserts, mDeletes);
 
     GET_TIME(start);
+
+    init_rwlock();
+
+    for (long thread = 0; thread < thread_count; thread++) {
+        pthread_create(&thread_handles[thread], NULL, single_rwlock, (void *) thread);
+    }
+
+    for (int thread = 0; thread < thread_count; thread++) {
+        pthread_join(thread_handles[thread], NULL);
+    }
+
+    destroy_rwlock();
 
     GET_TIME(finish);
     elapsed = finish - start;

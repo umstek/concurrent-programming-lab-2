@@ -49,10 +49,10 @@ int destroy_mutex() {
     return 0;
 }
 
-int operations[M];
-int values[M];
+int operations_mutex[M];
+int values_mutex[M];
 int n_threads_mutex;
-struct Node *head = NULL;
+struct Node *head_mutex = NULL;
 
 void *single_mutex(void *rank) {
     int share = M / n_threads_mutex;
@@ -61,15 +61,15 @@ void *single_mutex(void *rank) {
     int ei = share * (id + 1);
 
     for (int i = bi; i < ei; ++i) {
-        switch (operations[i]) {
+        switch (operations_mutex[i]) {
             case 1:
-                insert_mutex(values[i], &head);
+                insert_mutex(values_mutex[i], &head_mutex);
                 break;
             case 2:
-                delete_mutex(values[i], &head);
+                delete_mutex(values_mutex[i], &head_mutex);
                 break;
             default:
-                member_mutex(values[i], head);
+                member_mutex(values_mutex[i], head_mutex);
                 break;
         }
     }
@@ -84,11 +84,11 @@ double time_mutex(int mInserts, int mDeletes, int thread_count) {
 
     double start, finish, elapsed;
 
-    head = NULL;
-    populate_initial(head);
+    head_mutex = NULL;
+    populate_initial(head_mutex);
 
-    populate_values(values);
-    populate_operations(operations, mInserts, mDeletes);
+    populate_values(values_mutex);
+    populate_operations(operations_mutex, mInserts, mDeletes);
 
     GET_TIME(start);
 
