@@ -21,10 +21,10 @@ void populate_values(int *values);
 
 void populate_operations(int *operations, int mInserts, int mDeletes);
 
-int operations[M];
-int values[M];
-
 double time_serial(int mInserts, int mDeletes) {
+    int operations[M];
+    int values[M];
+
     double start, finish, elapsed;
 
     struct Node *head = NULL;

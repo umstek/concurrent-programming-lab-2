@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "timer.h"
+
+#define M 10000
 
 struct Node;
 
@@ -9,6 +12,12 @@ int member(int value, struct Node *head_p);
 int insert(int value, struct Node **head_pp);
 
 int delete(int value, struct Node **head_pp);
+
+void populate_initial(struct Node *head_pp);
+
+void populate_values(int *values);
+
+void populate_operations(int *operations, int mInserts, int mDeletes);
 
 pthread_mutex_t mutex;
 
@@ -38,4 +47,24 @@ void delete_mutex(int value, struct Node **head_pp) {
 int destroy_mutex() {
     pthread_mutex_destroy(&mutex);
     return 0;
+}
+
+double time_mutex(int mInserts, int mDeletes, int threads) {
+    int operations[M];
+    int values[M];
+
+    double start, finish, elapsed;
+
+    struct Node *head = NULL;
+    populate_initial(head);
+
+    populate_values(values);
+    populate_operations(operations, mInserts, mDeletes);
+
+    GET_TIME(start);
+
+    GET_TIME(finish);
+    elapsed = finish - start;
+
+    return elapsed;
 }
