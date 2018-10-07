@@ -9,10 +9,11 @@ double time_mutex(int mInserts, int mDeletes, int thread_count);
 double time_rwlock(int mInserts, int mDeletes, int thread_count);
 
 int main() {
-    srand((unsigned int) time(NULL));
     int thread_counts[] = {1, 2, 4, 8};
 
     printf("Impl,case,threads,time\n");
+
+    srand((unsigned int) time(NULL));
 
     double serial_elapsed_1 = time_serial(50, 50);
     printf("serial,1,1,%f\n", serial_elapsed_1);
