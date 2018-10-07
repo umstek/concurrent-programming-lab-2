@@ -49,7 +49,11 @@ int destroy_mutex() {
     return 0;
 }
 
-double time_mutex(int mInserts, int mDeletes, int threads) {
+void *single_thread_mutex(void *rank) {
+
+}
+
+double time_mutex(int mInserts, int mDeletes, int thread_count) {
     int operations[M];
     int values[M];
 
@@ -62,6 +66,18 @@ double time_mutex(int mInserts, int mDeletes, int threads) {
     populate_operations(operations, mInserts, mDeletes);
 
     GET_TIME(start);
+
+    pthread_mutex_init(&mutex, NULL);
+
+//    for (thread = 0; thread < thread_count; thread++) {
+//        pthread_create(&thread_handles[thread], NULL, pthread_on_linked_list, (void *) thread);
+//    }
+//
+//    for (thread = 0; thread < thread_count; thread++) {
+//        pthread_join(thread_handles[thread], NULL);
+//    }
+
+    pthread_mutex_destroy(&mutex);
 
     GET_TIME(finish);
     elapsed = finish - start;

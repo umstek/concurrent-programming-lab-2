@@ -10,3 +10,6 @@ cmake ..
 make
 
 ./LinkedList
+
+cat /proc/cpuinfo > systeminfo.txt
+cat /proc/meminfo >> systeminfo.txt
