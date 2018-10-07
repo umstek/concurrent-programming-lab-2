@@ -4,7 +4,7 @@
 
 #define M 10000
 
-void affine_pseudo_random_fill(int *operations, const int mInserts, const int mDeletes) {
+void random_fill(int *operations, const int mInserts, const int mDeletes) {
     int a;
     do a = rand() % M; while (M / a == 0);
     int b = rand() % M;
@@ -27,5 +27,5 @@ void populate_values(int *values) {
 
 void populate_operations(int *operations, int mInserts, int mDeletes) {
     memset(operations, 0, sizeof(*operations));
-    affine_pseudo_random_fill(operations, mInserts, mDeletes);
+    random_fill(operations, mInserts, mDeletes);
 }
