@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define N 1000
+
 struct Node {
     int data;
     struct Node *next_p;
@@ -52,4 +54,11 @@ int delete(int value, struct Node **head_pp) {
         }
         return 1;
     } else return 0;
+}
+
+void populate_initial(struct Node *head_pp) {
+    for (int i = 0; i < N; ++i) {
+        int r = rand() % 65536;
+        if (!insert(r, &head_pp)) i--;
+    }
 }

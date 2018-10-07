@@ -2,17 +2,10 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-int init_mutex();
-
-int destroy_mutex();
-
-int init_rwlock();
-
-int destroy_rwlock();
+double time_serial(int mInserts, int mDeletes);
 
 int main() {
-    init_rwlock();
-    printf("%d", RAND_MAX);
-    destroy_rwlock();
+    double serial_elapsed = time_serial(500, 500);
+    printf("%f", serial_elapsed);
     return 0;
 }
