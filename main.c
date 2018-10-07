@@ -6,9 +6,13 @@ int init_mutex();
 
 int destroy_mutex();
 
+int init_rwlock();
+
+int destroy_rwlock();
+
 int main() {
-    init_mutex();
+    init_rwlock();
     printf("%d", RAND_MAX);
-    destroy_mutex();
+    destroy_rwlock();
     return 0;
 }
