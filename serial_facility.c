@@ -35,15 +35,12 @@ double time_serial(int mInserts, int mDeletes) {
 
     GET_TIME(start);
     for (int i = 0; i < M; ++i) {
-//        printf("x%d:%d", i, operations[i]);
         switch (operations[i]) {
             case 1:
                 insert(values[i], &head);
-//                printf("i");
                 break;
             case 2:
                 delete(values[i], &head);
-//                printf("d");
                 break;
             default:
                 member(values[i], head);
