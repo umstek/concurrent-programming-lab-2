@@ -21,10 +21,10 @@ void populate_values(int *values);
 
 void populate_operations(int *operations, int mInserts, int mDeletes);
 
-double time_serial(int mInserts, int mDeletes) {
-    int operations[M];
-    int values[M];
+int operations[M];
+int values[M];
 
+double time_serial(int mInserts, int mDeletes) {
     double start, finish, elapsed;
 
     struct Node *head = NULL;
@@ -35,6 +35,7 @@ double time_serial(int mInserts, int mDeletes) {
 
     GET_TIME(start);
     for (int i = 0; i < M; ++i) {
+	// printf("%d,%d ", i, operations[i]);
         switch (operations[i]) {
             case 1:
                 insert(values[i], &head);

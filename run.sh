@@ -7,9 +7,9 @@ fi
 mkdir build
 cd build
 cmake ..
-make
+make VERBOSE=1
 
-./LinkedList
+./LinkedList > results.csv
 
 cat /proc/cpuinfo > systeminfo.txt
 cat /proc/meminfo >> systeminfo.txt
